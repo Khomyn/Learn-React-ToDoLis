@@ -1,48 +1,38 @@
-import React, { Component } from 'react';
+import React, {useState} from 'react';
+import {connect} from "react-redux";
+
 import './Add-task.scss';
+import addNewTaskAction from "../../store/actions/add-new-task.action";
 
-const  makeid = (length) => {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  for ( let i = 0; i < length; i++ ) {
-     result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
+const AddTask = ({add}) => {
+  const [value, setValue] = useState('');
 
-const LS_KEY = 'TASKS';
+  const submit = (event) => {
+    event.preventDefault();
+    add(value);
+    setValue('');
+  };
 
-export default class AddTask extends Component {
-  // eslint-disable-next-line no-useless-constructor
-  constructor() {
-    super();
-  }
-
-  add = () => {
-    const tasks = JSON.parse(localStorage.getItem(LS_KEY)) || [];
-    const newTask = {
-      id: makeid(7),
-      title: this.refs.newTask.value,
-      idDone: false,
-    };
-    tasks.push(newTask);
-    localStorage.setItem(LS_KEY, JSON.stringify(tasks));
-    this.refs.newTask.value = '';
-  }
-
-  render() {
-    return(
-      <div className="add-task-cont">
-        <input 
-          ref="newTask"
-          className="input"/>
-        <button 
-          className="add-btn"
-          onClick={() => this.add()}>
+  return (
+    <div className="add-task-cont">
+      <form onSubmit={event => submit(event)}>
+        <input
+          className="input"
+          value={value}
+          onChange={({target}) => setValue(target.value)}/>
+        <button
+          type="submit"
+          className="add-btn">
           Add
         </button>
-      </div>
-    );
-  }
-}
+      </form>
+    </div>
+  )
+};
+
+const mapDispatchToProps = dispatch => ({
+  add: title => dispatch(addNewTaskAction(title)),
+  //...
+});
+
+export default connect(null, mapDispatchToProps)(AddTask);

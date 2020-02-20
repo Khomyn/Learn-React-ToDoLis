@@ -1,23 +1,25 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.scss';
 
 import Header from './components/header/Header';
 import ToDoList from './components/To-do-list/To-do-list';
-import AddTask from './components/Add-task/Add_task';
+import {Provider} from "react-redux";
+import store from "./store/create.store";
 
-export default class App extends Component {
+export default class App extends React.Component {
   // eslint-disable-next-line no-useless-constructor
   constructor() {
     super();
-  }
+  } 
   
   render() {
     return (
-      <div className="container">
-         <Header />
-         <AddTask />
-         <ToDoList />
-      </div>     
+        <Provider store={store}>
+          <div className="container">
+            <Header />
+            <ToDoList />
+          </div>
+        </Provider>
     );
   }
 }
